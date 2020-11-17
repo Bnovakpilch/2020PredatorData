@@ -87,18 +87,17 @@ CODE2NAME = function(x){
 PredationII$Predator = CODE2NAME(PredationII$Predator)
 
 #Let's add a flower species column
-PredationII$Flower.Species = PredationII$?..Flower.ID
+PredationII$Flower.Species = PredationII$ï..Flower.ID
 PredationII$Flower.Species = str_sub(string = PredationII$Flower.Species, start = 1, end = 3)
 PredationII$Flower.Species = toupper(PredationII$Flower.Species)
 
 #Now that it's all uniform we can graph it!
-ggplot(PredationII, aes(x = Flower.Species))+geom_bar()
+ggplot(PredationII, aes(x =Flower.Species))+geom_bar(fill = "darkgreen")+ylab("Salticid Spiders")+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
+  ggtitle("Salticid Foraging Preference")+xlab("Flower Species")
 
-
-#Finally let's see if some plants harbor more species of predators than others:
-Predation$Flower.Species = Predation$?..Flower.ID
-Predation$Flower.Species = str_sub(string = Predation$Flower.Species, start = 1, end = 3)
-Predation$Flower.Species = toupper(Predation$Flower.Species)
+#Lets make it wide format:
+WP = dcast(Predation, Flower.Species~Predator)
+LP = melt(WP)
 
 
 
