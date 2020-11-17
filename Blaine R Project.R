@@ -53,6 +53,7 @@ Spider = Spider[order(Spider$Predator.Size..Cm.),]
 write.table(Spider, file = "2020 Spider Data Fixed.csv",row.names = F, col.names = T, sep = ",")
 
 #Let's Visualize Some of It!
+<<<<<<< HEAD
 #How does spider size varry? 
 SizeInPop = ggplot(Spider, aes(x = Spider$Predator.Size..Cm.))+ geom_histogram(binwidth = .25, fill = "red3")+xlab("Spider Size")+ ylab("Number of Individuals")+
   scale_x_continuous()+ ggtitle("Spider Size by Date")
@@ -60,6 +61,11 @@ SizeInPop = ggplot(Spider, aes(x = Spider$Predator.Size..Cm.))+ geom_histogram(b
 SizeInPop
 
 #How does it change over time though?
+=======
+ggplot(Spider, aes(x = Date))+ geom_histogram(binwidth = 5, fill = "orange")
+
+
+>>>>>>> 636b7791a62947938cc67935c9ba479cc8f92be5
 SizeXTime = ggplot(Spider, aes(x = Date, y =Spider$Predator.Size..Cm.))+ geom_boxplot(fill = "orange")+ylab("Spider Size")+ 
   scale_x_discrete()+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
   ggtitle("Spider Size by Date")
