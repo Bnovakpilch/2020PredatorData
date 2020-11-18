@@ -1,6 +1,5 @@
 #Let's start by loading our packages
 library(tidyverse)
-library(googleway) 
 library(sf) 
 library(rnaturalearth) 
 library(rnaturalearthdata)
@@ -73,12 +72,27 @@ summary.aov(SpiderAOV)
 
 #P<0.0001 It's Significant! Spiders do grow!
 
-#Lets look at the interaction between size and position "Subsetting", "Merge"
+#Lets look at the interaction between size and position "Subsetting", "Merge/Join"
 Size = Spider[,c(1,3)]
 Position = Spider[,c(1,2)]
 SizeXPosition = join(Size, Position, match = "first")
 
-ggplot(data = SizeXPosition, aes(x = Position, y = Predator.Size..Cm.))+geom_boxplot()
+#Plot it.
+
+ggplot(data = SizeXPosition, aes(x = Position, y = Predator.Size..Cm., fill = Position))+geom_boxplot()+ ylab("Spider Size")+ 
+  scale_x_discrete()+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
+  ggtitle("Spider Size by Date")
+
+#I wonder what the average size for each plant species is? "ddply"
+
+AVGSZ = ddply(.data = SizeXPosition, .variable = "Plant.Species", summarise, Mean.Size = mean(Predator.Size..Cm.))
+
+#More visualization:
+
+ggplot(data = AVGSZ, aes (x = reorder(Plant.Species, - Mean.Size), y = Mean.Size, fill = Plant.Species))+ geom_bar(stat = "identity")+
+  scale_x_discrete()+theme(axis.text.x=element_blank(), axis.ticks.x = element_blank() )+ggtitle("Mean Spider Size by Plant Species")+ 
+  xlab("Plant Species")+ ylab("Average Spider Size")
+  
 
 #Now let's look at some other data from this summer:
 
@@ -112,17 +126,6 @@ PredationII$Flower.Species = PredationII$ï..Flower.ID
 PredationII$Flower.Species = str_sub(string = PredationII$Flower.Species, start = 1, end = 3)
 PredationII$Flower.Species = toupper(PredationII$Flower.Species)
 
-#Now that it's all uniform we can graph it!
+#Now that it's all uniform we can graph it! "Bar Plot"
 ggplot(PredationI, aes(x =variable, y = value, fill = Flower.ID))+geom_bar(stat = "identity")+ylab("Predator Abundance")+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
   ggtitle("Predator Foraging Abundance & Preference")+xlab("Predator Species")
-
-#Neat, lets see if jumping spiders had a prefered flower species.
-#Subset our jumping spiders
-PredationII = subset(Predation,Predation$Predator == "JMP")
-
-#Rename them to their scientific name:
-CODE2NAME = function(x){
-  if_else(condition = x=="JMP", true = "Salticidae", false = "NA")}
-
-
-
