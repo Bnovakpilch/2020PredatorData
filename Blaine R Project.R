@@ -27,8 +27,12 @@ ggplot(data = world) +
 #It's pretty far out lets zoom in, plot our data, and make it non-gray. "Map showing geographic location".
 
 ULE = ggplot(data = world) +
-  geom_sf(fill = "peachpuff") +geom_point(ECL ,mapping = aes(x = long, y = lat))+ ggtitle("Data Collection Site")+ylab("Latitude")+
-  xlab("Longitude")+ annotate(geom = "text", x = -92.012529, y = 30.55, label = "UL Ecology Center", fontface = "bold", color = "red4", size = 5) +
+  geom_sf(fill = "peachpuff") +
+  geom_point(ECL ,mapping = aes(x = long, y = lat))+ 
+  ggtitle("Data Collection Site")+
+  ylab("Latitude")+
+  xlab("Longitude")+ 
+  annotate(geom = "text", x = -92.012529, y = 30.55, label = "UL Ecology Center", fontface = "bold", color = "red4", size = 5) +
   coord_sf(xlim = c(-95, -90), ylim = c(28, 32), expand = FALSE)+
   theme(panel.grid.major = element_line(color = gray(.5), linetype = "dashed"), panel.background = element_rect(fill = "powderblue"))
 
@@ -60,14 +64,22 @@ write.table(Spider, file = "2020 Spider Data Fixed.csv",row.names = F, col.names
 
 #Let's Visualize Some of It!
 #How does spider size varry? "Histogram" 
-SizeInPop = ggplot(Spider, aes(x = Spider$Predator.Size..Cm.))+ geom_histogram(binwidth = .25, fill = "salmon")+xlab("Spider Size")+ ylab("Number of Individuals")+
-  scale_x_continuous()+ ggtitle("Spider Size by Date")+theme(panel.background = element_rect(fill = "lightblue", color = "mintcream", size = 0.5, linetype = "solid"))
+SizeInPop = ggplot(Spider, aes(x = Spider$Predator.Size..Cm.))+ 
+  geom_histogram(binwidth = .25, fill = "salmon")+
+  xlab("Spider Size")+ 
+  ylab("Number of Individuals")+
+  scale_x_continuous()+ 
+  ggtitle("Spider Size by Date")+
+  theme(panel.background = element_rect(fill = "lightblue", color = "mintcream", size = 0.5, linetype = "solid"))
 
 SizeInPop
 
 #How does it change over time though? and how does position factor in with size?
-SizeXTime = ggplot(Spider, aes(x = Date, y =Spider$Predator.Size..Cm., fill = Position))+ geom_boxplot()+ylab("Spider Size")+ 
-  scale_x_discrete()+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
+SizeXTime = ggplot(Spider, aes(x = Date, y =Spider$Predator.Size..Cm., fill = Position))+ 
+  geom_boxplot()+
+  ylab("Spider Size")+ 
+  scale_x_discrete()+
+  theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
   ggtitle("Spider Size by Date")
 
 SizeXTime
@@ -86,8 +98,11 @@ SizeXPosition = join(Size, Position, match = "first")
 
 #Plot it.
 
-ggplot(data = SizeXPosition, aes(x = Position, y = Predator.Size..Cm., fill = Position))+geom_boxplot()+ ylab("Spider Size")+ 
-  scale_x_discrete()+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
+ggplot(data = SizeXPosition, aes(x = Position, y = Predator.Size..Cm., fill = Position))+
+  geom_boxplot()+ 
+  ylab("Spider Size")+ 
+  scale_x_discrete()+
+  theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
   ggtitle("Spider Size by Foraging Behavior")
 
 #I wonder what the average size for each plant species is? "ddply"
@@ -96,9 +111,13 @@ AVGSZ = ddply(.data = SizeXPosition, .variable = "Plant.Species", summarise, Mea
 
 #More visualization:
 
-ggplot(data = AVGSZ, aes (x = reorder(Plant.Species, - Mean.Size), y = Mean.Size, fill = Plant.Species))+ geom_bar(stat = "identity")+
-  scale_x_discrete()+theme(axis.text.x=element_blank(), axis.ticks.x = element_blank() )+ggtitle("Mean Spider Size by Plant Species")+ 
-  xlab("Plant Species")+ ylab("Average Spider Size")
+ggplot(data = AVGSZ, aes (x = reorder(Plant.Species, - Mean.Size), y = Mean.Size, fill = Plant.Species))+ 
+  geom_bar(stat = "identity")+
+  scale_x_discrete()+
+  theme(axis.text.x=element_blank(), axis.ticks.x = element_blank() )+
+  ggtitle("Mean Spider Size by Plant Species")+ 
+  xlab("Plant Species")+ 
+  ylab("Average Spider Size")
   
 #Now why does lynx spider size matter? Well their maximum prey size is actually linear
 #So we can use this data to see what sort of prey they can catch.
@@ -113,8 +132,11 @@ view(Spider)
 
 #Now let's graph it by date to see how prey size changes over time.
 
-PreyXTime = ggplot(Spider, aes(x = Date, y =Prey.Size))+ geom_dotplot(binaxis = "y", stackdir = "center", binwidth = .3)+ylab("Prey Size (mm)")+ 
-  scale_x_discrete()+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
+PreyXTime = ggplot(Spider, aes(x = Date, y =Prey.Size))+ 
+  geom_dotplot(binaxis = "y", stackdir = "center", binwidth = .3)+
+  ylab("Prey Size (mm)")+ 
+  scale_x_discrete()+
+  theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
   ggtitle("Prey Potential by Date")
 
 PreyXTime
@@ -158,5 +180,9 @@ PredationI = melt(PredationI)
 View(PredationI)
 
 #Now that it's all uniform we can graph it! "Bar Plot"
-ggplot(PredationI, aes(x =reorder(variable, - value), y = value, fill = Flower.ID))+geom_bar(stat = "identity")+ylab("Predator Abundance")+theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
-  ggtitle("Predator Abundance & Foraging Preference")+xlab("Predator Species")
+ggplot(PredationI, aes(x =reorder(variable, - value), y = value, fill = Flower.ID))+
+  geom_bar(stat = "identity")+
+  ylab("Predator Abundance")+
+  theme(panel.background = element_rect(fill = "lightblue", color = "lightblue", size = 0.5, linetype = "solid"))+
+  ggtitle("Predator Abundance & Foraging Preference")+
+  xlab("Predator Species")
